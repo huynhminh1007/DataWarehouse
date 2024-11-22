@@ -1,11 +1,8 @@
-
-Use db_staging;
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
+Use db_controller;
 DROP TABLE IF EXISTS `temp_staging`;
 
--- a chet roi doi t xiu gui lon file roi
 -- Tạo bảng tạm lưu trữ dữ liệu từ file lên 
 CREATE TABLE `temp_staging` (
   `id` TEXT,
@@ -34,13 +31,9 @@ CREATE TABLE `temp_staging` (
 );
 
 SET FOREIGN_KEY_CHECKS = 1;
--- Error Code: 1064. You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '
--- Load dữ liệu từ file CSV vào bảng tạm LOAD DATA INFILE '/var/lib/my' at line 1
--- m loi tu doan load file vao dung k    Doi xiu
--- Load dữ liệu từ file CSV vào bảng tạm   linux ma dua ve D:/.... nhu t duoc khong, hong, thay noi ng nao chay thi tu vao sua path lai cai duong dan nay cua m 
--- bi loi
--- hong co loi
--- nhin sang ben trai ma oi 
+ALTER TABLE temp_staging ADD INDEX(id(255)); 
+
+-- load data từ file lên bảng tạm
 LOAD DATA INFILE '/var/lib/mysql-files/crawled_data_laptop.csv'
 INTO TABLE temp_staging
 FIELDS TERMINATED BY ',' 
@@ -85,16 +78,10 @@ SET
         ELSE '"N/A"'
     END, '"N/A"')
     where id IS not null;
-ALTER TABLE temp_staging ADD INDEX(id(255));
+
+
+Use db_staging;
 DROP TABLE IF EXISTS staging_products;
--- m noi loi la loi doan nay handler
--- con chuc cai loi t chua noi vs m
--- Error Code: 1175. You are using safe update mode and you tried to update a table without a WHERE that uses a KEY column.  To disable safe mode, toggle the option in Preferences -> SQL Editor and reconnect.
--- loi 1: Error Code: 1175. You are using safe update mode and you tried to update a table without a WHERE that uses a KEY column.  To disable safe mode, toggle the option in Preferences -> SQL Editor and reconnect.
-
--- loi 2: Error Code: 1064. You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INT) AS natural_key,     sku,     product_name,     short_description,     CAST(' at line 27
-
-
 -- Tạo bảng staging_products
 CREATE TABLE staging_products (
    natural_key VARCHAR(255),
@@ -150,7 +137,7 @@ INSERT INTO staging_products (
     variations
 )
 SELECT
-   CAST(CASE when id regexp '^[0-9]+$' then id else '0' end as signed) as natural_key,
+    id AS natural_key,
     sku,
     product_name,
     short_description,
@@ -159,26 +146,18 @@ SELECT
     CAST(original_price AS DECIMAL(10, 2)) AS original_price,
     CAST(discount AS DECIMAL(10, 2)) AS discount,
     CAST(discount_rate AS DECIMAL(5, 2)) AS discount_rate,
-    CAST(all_time_quantity_sold AS double) AS all_time_quantity_sold,
+    CAST(all_time_quantity_sold AS DOUBLE) AS all_time_quantity_sold,
     CAST(rating_average AS DECIMAL(3, 2)) AS rating_average,
-    CAST(review_count AS signed) AS review_count,
+    CAST(review_count AS SIGNED) AS review_count,
     inventory_status,
-    CAST(stock_item_qty AS signed) AS stock_item_qty,
-    CAST(stock_item_max_sale_qty AS signed) AS stock_item_max_sale_qty,
-    CAST(brand_id AS signed) AS brand_id,
+    CAST(stock_item_qty AS SIGNED) AS stock_item_qty,
+    CAST(stock_item_max_sale_qty AS SIGNED) AS stock_item_max_sale_qty,
+    CAST(brand_id AS SIGNED) AS brand_id,
     brand_name,
-	left(url_key, 255) as url_path,
-    left(url_path, 255) as url_path,
+    LEFT(url_key, 255) AS url_key,
+    LEFT(url_path, 255) AS url_path,
     thumbnail_url,
     options,
     specifications,
-    variationsstaging_products
-	FROM temp_staging;
-
--- Error Code: 1064. You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INT) AS natural_key,     sku,     product_name,     short_description,     CAST(' at line 27
-
-
--- Error Code: 1292. Truncated incorrect INTEGER value: '2937.0'
-
-
-
+    variations
+FROM db_controller.temp_staging;

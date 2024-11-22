@@ -3,13 +3,6 @@ USE db_datawarehouse;
 
 ALTER DATABASE db_datawarehouse CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS data_sources (
-	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    source_name VARCHAR(50) NOT NULL,
-    
-    INDEX idx_src (source_name)
-);
-
 -- Table: dim_manufacturers
 CREATE TABLE IF NOT EXISTS dim_manufacturers (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -19,11 +12,10 @@ CREATE TABLE IF NOT EXISTS dim_manufacturers (
     delete_date INT,
     insert_date INT,
     update_date INT,
-    source_id INT UNSIGNED,
+    
     FOREIGN KEY (delete_date) REFERENCES dim_dates(date_sk) ON DELETE SET NULL,
     FOREIGN KEY (insert_date) REFERENCES dim_dates(date_sk) ON DELETE SET NULL,
-    FOREIGN KEY (update_date) REFERENCES dim_dates(date_sk) ON DELETE SET NULL,
-    FOREIGN KEY (source_id) REFERENCES data_sources(id) ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY (update_date) REFERENCES dim_dates(date_sk) ON DELETE SET NULL
 );
 
 -- Table: dim_products
@@ -43,12 +35,11 @@ CREATE TABLE IF NOT EXISTS dim_products (
     delete_date INT,
     insert_date INT,
     update_date INT,
-	source_id INT UNSIGNED,
     expired_date DATE DEFAULT '9999-12-31',
     INDEX idx_sku_no (sku_no),
+    
     FOREIGN KEY (manufacturer_id) REFERENCES dim_manufacturers(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (delete_date) REFERENCES dim_dates(date_sk) ON DELETE SET NULL,
     FOREIGN KEY (insert_date) REFERENCES dim_dates(date_sk) ON DELETE SET NULL,
-    FOREIGN KEY (update_date) REFERENCES dim_dates(date_sk) ON DELETE SET NULL,
-	FOREIGN KEY (source_id) REFERENCES data_sources(id) ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY (update_date) REFERENCES dim_dates(date_sk) ON DELETE SET NULL
 ) COMMENT = 'SKU';
