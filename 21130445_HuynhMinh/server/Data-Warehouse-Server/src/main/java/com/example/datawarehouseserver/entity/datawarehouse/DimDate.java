@@ -1,4 +1,4 @@
-package com.example.datawarehouseserver.entity;
+package com.example.datawarehouseserver.entity.datawarehouse;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
