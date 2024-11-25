@@ -1,10 +1,7 @@
-package com.example.datawarehouseserver.entity;
+package com.example.datawarehouseserver.entity.datawarehouse;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
@@ -16,7 +13,8 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+@EqualsAndHashCode(callSuper = false)
+public class Product extends BaseDim {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -38,6 +36,8 @@ public class Product {
 
     Integer stock;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manufacturer_id")
     Manufacturer manufacturer;

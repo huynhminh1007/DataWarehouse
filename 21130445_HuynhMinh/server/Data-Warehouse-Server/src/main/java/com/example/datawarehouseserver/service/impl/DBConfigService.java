@@ -33,7 +33,10 @@ public class DBConfigService implements IDBConfigService {
 
     public DataSource createDataSource(String dbName) {
         DBConfig dbConfig = getDbConfig(dbName);
+        return createDataSource(dbConfig);
+    }
 
+    public DataSource createDataSource(DBConfig dbConfig) {
         HikariDataSource dataSource = new HikariDataSource();
         dataSource.setJdbcUrl(dbConfig.getUrl());
         dataSource.setUsername(dbConfig.getUsername());
@@ -46,5 +49,9 @@ public class DBConfigService implements IDBConfigService {
 
     public JdbcTemplate createJdbcTemplate(String dbName) {
         return new JdbcTemplate(createDataSource(dbName));
+    }
+
+    public JdbcTemplate createJdbcTemplate(DBConfig dbConfig) {
+        return new JdbcTemplate(createDataSource(dbConfig));
     }
 }

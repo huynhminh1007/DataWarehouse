@@ -1,10 +1,7 @@
-package com.example.datawarehouseserver.entity;
+package com.example.datawarehouseserver.entity.datawarehouse;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
@@ -15,6 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode(callSuper = false)
 public class Manufacturer extends BaseDim {
 
     @Id
@@ -27,6 +25,8 @@ public class Manufacturer extends BaseDim {
     @Column(name = "manufacturer_name", length = 255)
     String manufacturerName;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     Set<Product> products;
 }

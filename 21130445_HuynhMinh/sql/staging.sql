@@ -161,3 +161,5 @@ SELECT
     specifications,
     variations
 FROM db_controller.temp_staging;
+
+DROP TABLE IF EXISTS db_controller.temp_staging;
