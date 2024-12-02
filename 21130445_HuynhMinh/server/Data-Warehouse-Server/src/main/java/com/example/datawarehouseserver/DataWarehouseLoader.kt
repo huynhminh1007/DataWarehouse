@@ -47,12 +47,13 @@ class DataWarehouseLoader(
 
                 val log = config.log.first()
                 val dbName = config.stagingConfig.dbName
+                val msg = "$dbName.${config.stagingTable} to db_datawarehouse.${config.datawarehouseTable}"
 
                 if (log.status == "loading_to_warehouse") {
                     saveLog(
                         log.clone().apply { id = null },
                         "load_to_warehouse_failed",
-                        "Insert from $dbName.${config.stagingTable} to db_datawarehouse.${config.datawarehouseTable} Failed. A process is already running.",
+                        "Insert from $msg Failed. A process is already running.",
                         "warn"
                     )
                     delay(60 * 1000)
@@ -61,7 +62,7 @@ class DataWarehouseLoader(
                     saveLog(
                         log.clone().apply { id = null },
                         "load_to_warehouse_failed",
-                        "Insert from $dbName.${config.stagingTable} to db_datawarehouse.${config.datawarehouseTable} Failed. RE is missing",
+                        "Insert from $msg Failed. RE is missing",
                         "warn"
                     )
                     delay(60 * 1000)
@@ -74,7 +75,7 @@ class DataWarehouseLoader(
                         saveLog(
                             log,
                             "loading_to_warehouse",
-                            "Loading from $dbName.${config.stagingTable} to db_datawarehouse.${config.datawarehouseTable}",
+                            "Loading from $msg",
                             "info"
                         )
                         delay(1000)
@@ -84,13 +85,13 @@ class DataWarehouseLoader(
                         saveLog(
                             log,
                             "load_to_warehouse_completed",
-                            "Inserted $countInserted records from $dbName.${config.stagingTable} to db_datawarehouse.${config.datawarehouseTable}",
+                            "Inserted $countInserted records from $msg",
                             "info"
                         )
                     } catch (e: Exception) {
                         saveLog(
                             log.clone().apply { id = null },
-                            "Insert Failed from $dbName.${config.stagingTable} to db_datawarehouse.${config.datawarehouseTable}",
+                            "Insert Failed from $msg",
                             "load_to_warehouse_failed",
                             "warn"
                         )
@@ -123,12 +124,13 @@ class DataWarehouseLoader(
 
                 val log = config.log.first()
                 val dbName = config.stagingConfig.dbName
+                val msg = "$dbName.${config.stagingTable} to db_datawarehouse.${config.datawarehouseTable}"
 
                 if (log.status == "loading_to_warehouse") {
                     saveLog(
                         log.clone().apply { id = null },
                         "load_to_warehouse_failed",
-                        "Insert from $dbName.${config.stagingTable} to db_datawarehouse.${config.datawarehouseTable} Failed. A process is already running.",
+                        "Insert from $msg Failed. A process is already running.",
                         "warn"
                     )
                     delay(60 * 1000)
@@ -137,7 +139,7 @@ class DataWarehouseLoader(
                     saveLog(
                         log.clone().apply { id = null },
                         "load_to_warehouse_failed",
-                        "Insert from $dbName.${config.stagingTable} to db_datawarehouse.${config.datawarehouseTable} Failed. RE is missing",
+                        "Insert from $msg Failed. RE is missing",
                         "warn"
                     )
                     delay(60 * 1000)
@@ -150,7 +152,7 @@ class DataWarehouseLoader(
                         saveLog(
                             log,
                             "loading_to_warehouse",
-                            "Loading from $dbName.${config.stagingTable} to db_datawarehouse.${config.datawarehouseTable}",
+                            "Loading from $msg",
                             "info"
                         )
                         delay(1000)
@@ -163,14 +165,14 @@ class DataWarehouseLoader(
                         saveLog(
                             log,
                             "load_to_warehouse_completed",
-                            "Inserted $countInsertNew new records, Updated $countUpdateExpire expire records, Inserted $countInsertNewType2 records type 2 from $dbName.${config.stagingTable} to db_datawarehouse.${config.datawarehouseTable}",
+                            "Inserted $countInsertNew new records, Updated $countUpdateExpire expire records, Inserted $countInsertNewType2 records type 2 from $msg",
                             "info"
                         )
                     } catch (e: Exception) {
                         saveLog(
                             log.clone().apply { id = null },
                             "load_to_warehouse_failed",
-                            "Insert Failed from $dbName.${config.stagingTable} to db_datawarehouse.${config.datawarehouseTable}",
+                            "Insert Failed from $msg",
                             "warn"
                         )
                         println("Lỗi khi insert: ${e.message}")
